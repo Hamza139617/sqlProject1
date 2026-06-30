@@ -135,3 +135,11 @@ SELECT track, energy / liveness as ratio FROM spotify
 WHERE liveness <> 0 AND energy/liveness > 1.2;
 
 
+
+SELECT
+    track,
+    views,
+    likes,
+    SUM(likes) OVER (ORDER BY views) AS cumulative_likes
+FROM spotify;
+
