@@ -103,17 +103,16 @@ Calculate the cumulative sum of likes for tracks ordered by the number of views,
 */
 
 
-SELECT 
-    artist,
-    track,
-    SUM(views)
-FROM spotify
-GROUP BY 1, 2
-ORDER BY 1, 3 DESC LIMIT 3;
-
-SELECT track FROM spotify 
-WHERE liveness > (SELECT AVG(liveness) FROM spotify);
-
+SELECT * FROM (
+    SELECT
+        artist,
+        track,
+        SUM(views) AS total_views,
+        RANK() OVER (PARTITION BY artist ORDER BY SUM(views) DESC) AS rnk
+    FROM spotify
+    GROUP BY artist, track
+) AS ranked
+WHERE rnk <= 3;
 
 
 WITH cte
