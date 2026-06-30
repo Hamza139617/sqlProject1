@@ -103,4 +103,35 @@ Calculate the cumulative sum of likes for tracks ordered by the number of views,
 */
 
 
+SELECT 
+    artist,
+    track,
+    SUM(views)
+FROM spotify
+GROUP BY 1, 2
+ORDER BY 1, 3 DESC LIMIT 3;
+
+SELECT track FROM spotify 
+WHERE liveness > (SELECT AVG(liveness) FROM spotify);
+
+
+
+WITH cte
+AS
+(SELECT
+    album,
+    MAX(energy) AS highest_energy,
+    MIN(energy) AS lowest_energy
+FROM spotify
+GROUP BY 1
+)
+SELECT
+    album,
+    highest_energy - lowest_energy as energy_diff
+FROM cte;
+
+
+SELECT track, energy / liveness as ratio FROM spotify
+WHERE liveness <> 0 AND energy/liveness > 1.2;
+
 
